@@ -9,6 +9,8 @@ public class Weather {
 
     public Basic basic;
 
+    public Now now;
+
     public AQI aqi;
 
     public Lifestyle lifestyle;
