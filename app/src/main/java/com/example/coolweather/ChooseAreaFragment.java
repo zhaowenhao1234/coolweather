@@ -1,6 +1,7 @@
 package com.example.coolweather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import org.litepal.crud.LitePalSupport;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -100,6 +102,12 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectCity = cityList.get(position);
                     queryCounties();
+                }else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId=countyList.get(position).getWeatherId();
+                    Intent intent=new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -130,7 +138,7 @@ public class ChooseAreaFragment extends Fragment {
                 dataList.add(province.getProvinceName());
             }
             adapter.notifyDataSetChanged();
-            listView.setSelection(0);
+            listView.smoothScrollToPosition(0);
             currentLevel = LEVEL_PROVINCE;
         } else {
             String address = "http://guolin.tech/api/china";
@@ -151,7 +159,7 @@ public class ChooseAreaFragment extends Fragment {
                 dataList.add(city.getCityName());
             }
             adapter.notifyDataSetChanged();
-            listView.setSelection(0);
+            listView.smoothScrollToPosition(0);
             currentLevel = LEVEL_CITY;
         } else {
             int provinceCode = selectProvince.getProvinceCode();
@@ -173,7 +181,7 @@ public class ChooseAreaFragment extends Fragment {
                 dataList.add(county.getCountyName());
             }
             adapter.notifyDataSetChanged();
-            listView.setSelection(0);
+            listView.smoothScrollToPosition(0);
             currentLevel = LEVEL_COUNTY;
         } else {
             int provinceCode = selectProvince.getProvinceCode();
@@ -238,8 +246,9 @@ public class ChooseAreaFragment extends Fragment {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("加载中...");
             progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
-        progressDialog.show();
+
     }
 
     /**
@@ -247,7 +256,6 @@ public class ChooseAreaFragment extends Fragment {
      */
     private void closeProgressDialog() {
         if (progressDialog != null) {
-            Log.d("niaho", "closeProgressDialog: ");
             progressDialog.dismiss();
         }
     }

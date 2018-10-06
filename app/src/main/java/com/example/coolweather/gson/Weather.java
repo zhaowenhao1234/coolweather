@@ -11,10 +11,13 @@ public class Weather {
 
     public Now now;
 
+    @SerializedName("air_now_city")
     public AQI aqi;
 
-    public Lifestyle lifestyle;
+    @SerializedName("lifestyle")
+    public List<Lifestyle> lifestyleList;
 
+    @SerializedName("update")
     public Upate upate;
 
     @SerializedName("daily_forecast")

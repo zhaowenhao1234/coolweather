@@ -24,14 +24,16 @@
         android:layout_weight="1"
         android:textColor="#fff"
         android:layout_gravity="center"
-        android:gravity="right"
+        android:gravity="center"
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/min_txt"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_gravity="center"
-        android:gravity="right"
+        android:gravity="center"
         android:textColor="#fff"
         android:layout_height="wrap_content" />
+
+
 </LinearLayout>

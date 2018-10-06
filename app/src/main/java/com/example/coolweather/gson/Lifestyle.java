@@ -14,9 +14,4 @@ public class Lifestyle {
      */
     @SerializedName("txt")
     public String info;
-    /**
-     * 生活指数类型
-     */
-    @SerializedName("type")
-    public String type;
 }
