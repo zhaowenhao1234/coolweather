@@ -56,7 +56,7 @@ public class WeatherActivity extends AppCompatActivity {
     private MydatabaseHelper dbHelper;
     private SQLiteDatabase db;
     private boolean flag;
-    private int num=0;
+    private int num = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,34 +88,66 @@ public class WeatherActivity extends AppCompatActivity {
      * 从数据库中查找天气信息
      */
     public boolean requestFromDb(String weatherId) {
-        Cursor cursor = db.query("weather", null,
-                "weatherid = ?", new String[]{weatherId}, null, null, null);
-        if ((cursor.getCount()) >0) {
-            cursor.moveToFirst();
-            List<String> infoList = new ArrayList<>();
-            String now = cursor.getString(cursor.getColumnIndex("now"));
-            infoList.add(now);
-            String aqi = cursor.getString(cursor.getColumnIndex("aqi"));
-            infoList.add(aqi);
-            String forecast = cursor.getString(cursor.getColumnIndex("forecast"));
-            infoList.add(forecast);
-            String lifestyle = cursor.getString(cursor.getColumnIndex("lifestyle"));
-            infoList.add(lifestyle);
-            cursor.close();
-            for (int i = 0; i < 4; i++) {
-                final Weather weather = Utility.handleWeatherResponse(infoList.get(i));
-                final int finalI = i;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showWeatherInfo(weather, finalI);
-                    }
-                });
+        if (weatherId == null) {
+            Cursor cursor = db.query("weather", null,
+                    null, null, null, null, null);
+            if ((cursor.getCount()) > 0) {
+                cursor.moveToLast();
+                List<String> infoList = new ArrayList<>();
+                String now = cursor.getString(cursor.getColumnIndex("now"));
+                infoList.add(now);
+                String aqi = cursor.getString(cursor.getColumnIndex("aqi"));
+                infoList.add(aqi);
+                String forecast = cursor.getString(cursor.getColumnIndex("forecast"));
+                infoList.add(forecast);
+                String lifestyle = cursor.getString(cursor.getColumnIndex("lifestyle"));
+                infoList.add(lifestyle);
+                cursor.close();
+                for (int i = 0; i < 4; i++) {
+                    final Weather weather = Utility.handleWeatherResponse(infoList.get(i));
+                    final int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showWeatherInfo(weather, finalI);
+                        }
+                    });
+                }
+                infoList.clear();
+                return true;
+            } else {
+                return false;
             }
-            infoList.clear();
-            return true;
         } else {
-            return false;
+            Cursor cursor = db.query("weather", null,
+                    "weatherid = ?", new String[]{weatherId}, null, null, null);
+            if ((cursor.getCount()) > 0) {
+                cursor.moveToFirst();
+                List<String> infoList = new ArrayList<>();
+                String now = cursor.getString(cursor.getColumnIndex("now"));
+                infoList.add(now);
+                String aqi = cursor.getString(cursor.getColumnIndex("aqi"));
+                infoList.add(aqi);
+                String forecast = cursor.getString(cursor.getColumnIndex("forecast"));
+                infoList.add(forecast);
+                String lifestyle = cursor.getString(cursor.getColumnIndex("lifestyle"));
+                infoList.add(lifestyle);
+                cursor.close();
+                for (int i = 0; i < 4; i++) {
+                    final Weather weather = Utility.handleWeatherResponse(infoList.get(i));
+                    final int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showWeatherInfo(weather, finalI);
+                        }
+                    });
+                }
+                infoList.clear();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -159,9 +191,9 @@ public class WeatherActivity extends AppCompatActivity {
                                         contentValues.put("now", responseText);
                                         break;
                                     case 1:
-                                        if(weather.status.equals("ok")){
+                                        if (weather.status.equals("ok")) {
                                             contentValues.put("aqi", responseText);
-                                        }else if(weather.status.equals("permission denied")){
+                                        } else if (weather.status.equals("permission denied")) {
                                             contentValues.put("aqi", "暂无数据");
                                         }
                                         break;
@@ -173,11 +205,11 @@ public class WeatherActivity extends AppCompatActivity {
                                         break;
                                 }
                                 //当所有的
-                                if(num==4){
+                                if (num == 4) {
                                     db.insert("weather", null, contentValues);
                                     contentValues.clear();
                                     url.clear();
-                                    num=0;
+                                    num = 0;
                                 }
                             } else {
                                 Toast.makeText(WeatherActivity.this, "获取天气信息失败123", Toast.LENGTH_SHORT).show();
@@ -218,10 +250,10 @@ public class WeatherActivity extends AppCompatActivity {
                 weatherInfoText.setText(weatherInfo);
                 break;
             case 1:
-                if (weather!=null&&!weather.status.equals("permission denied")) {
+                if (weather != null && !weather.status.equals("permission denied")) {
                     aqiText.setText(weather.aqi.aqi);
                     pm25Text.setText(weather.aqi.pm25);
-                } else  {
+                } else {
                     aqiText.setText("暂无数据");
                     pm25Text.setText("暂无数据");
                 }
